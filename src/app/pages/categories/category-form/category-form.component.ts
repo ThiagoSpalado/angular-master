@@ -41,6 +41,15 @@ ngAfterContentChecked(){
   this.setPageTitle();
 }
 
+submitForm(){
+  this.submittingForm = true;
+
+  if (this.currentAction == "new")
+    this.createCategory();
+  else
+    this.updateCategory();
+}
+
 //PRIVATE MATHODS
 
 private setCurrentAction(){
@@ -83,4 +92,37 @@ private setPageTitle(){
   }
 }
 
+private createCategory(){
+  const category: Category = Object.assign(new Category(), this.categoryForm.value);
+
+  this.categoryService.create(category)
+    .subscribe(
+      category => this.actionsForSuccsess(category),
+      error => this.actionsForError(error)
+    )
+}
+
+private updateCategory(){
+
+}
+
+private actionsForSuccsess(category: Category){
+  toastr.success("Solicitação processada com sucesso!");
+
+  //redirect to component page
+  this.router.navigateByUrl("categories",{skipLocationChange: true}).then(
+    () => this.router.navigate(["categories", category.id,"edit"])
+  )
+}
+
+private actionsForError(error){
+  toastr.error("Erro ao processar a sua solicitação");
+  
+  this.submittingForm = false;
+
+  if(error.status === 422)
+     this.serverErrorMessages = JSON.parse(error._body).errors;
+  else
+       this.serverErrorMessages = ["Falha na comunicação com o servidor, por favor tente mais tarde"];
+}
 }
