@@ -103,7 +103,13 @@ private createCategory(){
 }
 
 private updateCategory(){
+  const category: Category = Object.assign(new Category(), this.categoryForm.value);
 
+  this.categoryService.update(category)
+    .subscribe(
+    category => this.actionsForSuccsess(category),
+    error => this.actionsForError(error)
+  )
 }
 
 private actionsForSuccsess(category: Category){
@@ -120,9 +126,9 @@ private actionsForError(error){
   
   this.submittingForm = false;
 
-  // if(error.status === 422)
-  //    this.serverErrorMessages = JSON.parse(error._body).errors;
-  // else
-  //      this.serverErrorMessages = ["Falha na comunicação com o servidor, por favor tente mais tarde"];
+  if(error.status === 422)
+     this.serverErrorMessages = JSON.parse(error._body).errors;
+  else
+       this.serverErrorMessages = ["Falha na comunicação com o servidor, por favor tente mais tarde"];
 }
 }
