@@ -130,5 +130,5 @@ private actionsForError(error){
      this.serverErrorMessages = JSON.parse(error._body).errors;
   else
        this.serverErrorMessages = ["Falha na comunicação com o servidor, por favor tente mais tarde"];
-}
+  }
 }
